@@ -24,22 +24,32 @@ def copy_to_clipboard():
 # Create the main window
 root = tk.Tk()
 root.title("Password Generator")
+root.geometry("400x300")
+
+# Dark Mode Style
+root.configure(bg="#2E2E2E")
+label_font = ("Arial", 12, "bold")
+button_font = ("Arial", 10)
+password_font = ("Arial", 14, "bold")
 
 # Create and place the widgets
-label = tk.Label(root, text="Enter the desired password length:")
+label = tk.Label(root, text="Enter the desired password length:", font=label_font, bg="#2E2E2E", fg="#FFFFFF")
 label.pack(pady=10)
 
-entry = tk.Entry(root)
+entry = tk.Entry(root, font=label_font, bg="#555555", fg="#FFFFFF", insertbackground="#FFFFFF")
 entry.pack(pady=5)
 
-button = tk.Button(root, text="Generate Password", command=show_password)
-button.pack(pady=10)
+button_frame = tk.Frame(root, bg="#2E2E2E")
+button_frame.pack(pady=10)
 
-password_label = tk.Label(root, text="")
-password_label.pack(pady=5)
+generate_button = tk.Button(button_frame, text="Generate Password", font=button_font, command=show_password, bg="#4CAF50", fg="white")
+generate_button.grid(row=0, column=0, padx=10)
 
-copy_button = tk.Button(root, text="Copy Password", command=copy_to_clipboard)
-copy_button.pack(pady=10)
+copy_button = tk.Button(button_frame, text="Copy Password", font=button_font, command=copy_to_clipboard, bg="#2196F3", fg="white")
+copy_button.grid(row=0, column=1, padx=10)
+
+password_label = tk.Label(root, text="", font=password_font, bg="#2E2E2E", fg="#FFFFFF")
+password_label.pack(pady=20)
 
 # Run the application
 root.mainloop()
