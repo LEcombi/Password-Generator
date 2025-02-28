@@ -52,6 +52,7 @@ def unlock_database():
 # Create the main window
 root = tk.Tk()
 root.title("Password Generator and Manager")
+root.iconbitmap("key.ico")
 root.geometry("400x450")
 
 # Dark Mode Style
