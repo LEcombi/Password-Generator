@@ -15,9 +15,9 @@ def show_password():
         messagebox.showerror("Invalid Input", "Please enter a valid number.")
 
 # Function to copy the generated password to the clipboard
-def copy_to_clipboard():
+def copy_specific_password_to_clipboard(password):
     root.clipboard_clear()
-    root.clipboard_append(password_label.cget("text"))
+    root.clipboard_append(password)
     messagebox.showinfo("Copied", "Password copied to clipboard.")
 
 # Function to save the generated password for a specific service
@@ -31,7 +31,8 @@ def save_password():
         messagebox.showerror("Error", "Service name or password is missing.")
 
 # Function to copy a specific password to the clipboard
-def copy_to_clipboard(password):
+def copy_to_clipboard():
+    password = password_label.cget("text")
     root.clipboard_clear()
     root.clipboard_append(password)
     messagebox.showinfo("Copied", "Password copied to clipboard.")
@@ -42,7 +43,9 @@ def unlock_database():
     if root_pass:
         entries = password_manager.unlock_database(root_pass)
         if entries:
-            show_passwords_window(entries)
+            def show_passwords_window(entries):
+                password_display.show_all_passwords(root, entries, reload_passwords,
+                                                    copy_specific_password_to_clipboard, delete_password)
             enable_password_entry()
         else:
             messagebox.showerror("Error", "Invalid root password or no entries found.")
