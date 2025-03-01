@@ -63,12 +63,29 @@ def unlock_database():
     if root_pass:
         entries = password_manager.unlock_database(root_pass)
         if entries:
-            entry_list = "\n".join([f"{service}: {password}" for service, password in entries])
-            messagebox.showinfo("Database Entries", entry_list)
+            show_all_passwords(entries)
         else:
             messagebox.showerror("Error", "Invalid root password or no entries found.")
     else:
         messagebox.showerror("Error", "Root password is missing.")
+
+# Function to display all passwords in the database
+def show_all_passwords(entries):
+    output_window = tk.Toplevel(root)
+    output_window.title("All Passwords")
+    output_window.geometry("400x450")
+    output_window.configure(bg="#2E2E2E")
+    output_window.iconbitmap("key.ico")
+
+    for service, password in entries:
+        frame = tk.Frame(output_window, bg="#2E2E2E")
+        frame.pack(fill=tk.X, pady=5)
+
+        password_label = tk.Label(frame, text=f"{service}: {password}", font=password_font, bg="#2E2E2E", fg="#FFFFFF", justify=tk.LEFT)
+        password_label.pack(side=tk.LEFT, padx=10)
+
+        copy_button = tk.Button(frame, text="Copy", font=button_font, command=lambda p=password: copy_to_clipboard(p), bg="#2196F3", fg="white")
+        copy_button.pack(side=tk.RIGHT, padx=10)
 
 # Create the main window
 root = tk.Tk()

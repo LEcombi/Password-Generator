@@ -7,7 +7,9 @@ with open('../key.key', 'rb') as keyfile:
 cipher_suite = Fernet(key)
 
 # Set root password (replace with your own secure password)
+
 root_password = "my_secure_root_password"
+
 encrypted_password = cipher_suite.encrypt(root_password.encode())
 
 # Save encrypted password to config file
