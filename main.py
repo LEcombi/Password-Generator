@@ -4,6 +4,7 @@ from tkinter import simpledialog
 import password_generator
 import password_manager
 
+# Function to generate and display a password
 def show_password():
     try:
         length = int(entry.get())
@@ -12,11 +13,13 @@ def show_password():
     except ValueError:
         messagebox.showerror("Invalid Input", "Please enter a valid number.")
 
+# Function to copy the generated password to the clipboard
 def copy_to_clipboard():
     root.clipboard_clear()
     root.clipboard_append(password_label.cget("text"))
     messagebox.showinfo("Copied", "Password copied to clipboard.")
 
+# Function to save the generated password for a specific service
 def save_password():
     service = simpledialog.askstring("Input", "Enter the service name:")
     password = password_label.cget("text")
@@ -26,11 +29,13 @@ def save_password():
     else:
         messagebox.showerror("Error", "Service name or password is missing.")
 
+# Function to copy a specific password to the clipboard
 def copy_to_clipboard(password):
     root.clipboard_clear()
     root.clipboard_append(password)
     messagebox.showinfo("Copied", "Password copied to clipboard.")
 
+# Function to retrieve and display a password for a specific service
 def retrieve_password():
     service = simpledialog.askstring("Input", "Enter the service name to retrieve:")
     if service:
@@ -51,6 +56,8 @@ def retrieve_password():
             messagebox.showerror("Error", "Service not found.")
     else:
         messagebox.showerror("Error", "Service name is missing.")
+
+# Function to unlock the database using the root password
 def unlock_database():
     root_pass = simpledialog.askstring("Input", "Enter root password:", show='*')
     if root_pass:

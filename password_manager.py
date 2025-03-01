@@ -20,11 +20,13 @@ c.execute('''CREATE TABLE IF NOT EXISTS passwords
              (service text, encrypted_password text)''')
 conn.commit()
 
+# Function to save a password for a specific service
 def save_password(service, password):
     encrypted_password = cipher_suite.encrypt(password.encode())
     c.execute("INSERT INTO passwords VALUES (?, ?)", (service, encrypted_password))
     conn.commit()
 
+# Function to retrieve a password for a specific service
 def retrieve_password(service):
     c.execute("SELECT encrypted_password FROM passwords WHERE service=?", (service,))
     result = c.fetchone()
@@ -35,6 +37,7 @@ def retrieve_password(service):
     else:
         return None
 
+# Function to unlock the database using the root password
 def unlock_database(input_password):
     if input_password == root_password:
         c.execute("SELECT service, encrypted_password FROM passwords")
@@ -44,5 +47,6 @@ def unlock_database(input_password):
     else:
         return None
 
+# Function to close the database connection
 def close_connection():
     conn.close()
