@@ -35,28 +35,6 @@ def copy_to_clipboard(password):
     root.clipboard_append(password)
     messagebox.showinfo("Copied", "Password copied to clipboard.")
 
-# Function to retrieve and display a password for a specific service
-def retrieve_password():
-    service = simpledialog.askstring("Input", "Enter the service name to retrieve:")
-    if service:
-        password = password_manager.retrieve_password(service)
-        if password:
-            output_window = tk.Toplevel(root)
-            output_window.title("Retrieved Password")
-            output_window.geometry("400x150")
-            output_window.configure(bg="#2E2E2E")
-            output_window.iconbitmap("key.ico")
-
-            password_label = tk.Label(output_window, text=f"Password for {service}: {password}", font=password_font, bg="#2E2E2E", fg="#FFFFFF")
-            password_label.pack(pady=10)
-
-            copy_button = tk.Button(output_window, text="Copy Password", font=button_font, command=lambda: copy_to_clipboard(password), bg="#2196F3", fg="white")
-            copy_button.pack(pady=10)
-        else:
-            messagebox.showerror("Error", "Service not found.")
-    else:
-        messagebox.showerror("Error", "Service name is missing.")
-
 # Function to unlock the database using the root password
 def unlock_database():
     root_pass = simpledialog.askstring("Input", "Enter root password:", show='*')
@@ -87,6 +65,20 @@ def show_all_passwords(entries):
         copy_button = tk.Button(frame, text="Copy", font=button_font, command=lambda p=password: copy_to_clipboard(p), bg="#2196F3", fg="white")
         copy_button.pack(side=tk.RIGHT, padx=10)
 
+# Function to handle entry click event
+def on_entry_click(event):
+    """Function that is executed when the entry field is clicked"""
+    if entry.get() == '12':
+        entry.delete(0, "end")  # Removes the placeholder text
+        entry.config(fg='white')
+
+# Function to handle entry focusout event
+def on_focusout(event):
+    """Function that is executed when the entry field loses focus"""
+    if entry.get() == '':
+        entry.insert(0, '12')
+        entry.config(fg='grey')
+
 # Create the main window
 root = tk.Tk()
 root.title("Password Generator and Manager")
@@ -104,6 +96,9 @@ label = tk.Label(root, text="Enter the desired password length:", font=label_fon
 label.pack(pady=10)
 
 entry = tk.Entry(root, font=label_font, bg="#555555", fg="#FFFFFF", insertbackground="#FFFFFF")
+entry.insert(0, '12')
+entry.bind('<FocusIn>', on_entry_click)
+entry.bind('<FocusOut>', on_focusout)
 entry.pack(pady=5)
 
 button_frame = tk.Frame(root, bg="#2E2E2E")
@@ -120,9 +115,6 @@ password_label.pack(pady=20)
 
 save_button = tk.Button(root, text="Save Password", font=button_font, command=save_password, bg="#FF5722", fg="white")
 save_button.pack(pady=10)
-
-retrieve_button = tk.Button(root, text="Retrieve Password", font=button_font, command=retrieve_password, bg="#FFC107", fg="black")
-retrieve_button.pack(pady=10)
 
 unlock_button = tk.Button(root, text="Unlock Database", font=button_font, command=unlock_database, bg="#9C27B0", fg="white")
 unlock_button.pack(pady=10)

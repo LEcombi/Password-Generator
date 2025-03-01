@@ -13,6 +13,11 @@ def generate_password(length=12):
 if __name__ == "__main__":
     print("Password Generator")
     # Prompt the user to enter the desired password length
-    pass_length = int(input("Enter the desired password length: "))
+    pass_length = input("Enter the desired password length (default is 12): ")
+    # Use default length if no input is provided
+    if not pass_length:
+        pass_length = 12
+    else:
+        pass_length = int(pass_length)
     # Generate and display the password
     print("Generated Password:", generate_password(pass_length))
