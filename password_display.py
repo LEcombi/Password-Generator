@@ -2,11 +2,17 @@ import tkinter as tk
 from tkinter import messagebox
 
 def copy_to_clipboard(root, password):
+    """Function to copy the password to the clipboard"""
     root.clipboard_clear()
     root.clipboard_append(password)
     messagebox.showinfo("Copied", "Password copied to clipboard.")
 
-def show_all_passwords(root, entries):
+def show_all_passwords(root, entries, reload_callback, delete_callback):
+    """Function to display all passwords in the database"""
+    def reload_passwords():
+        output_window.destroy()
+        reload_callback()
+
     output_window = tk.Toplevel(root)
     output_window.title("All Passwords")
     output_window.geometry("400x450")
@@ -26,3 +32,9 @@ def show_all_passwords(root, entries):
 
         copy_button = tk.Button(frame, text="Copy", font=button_font, command=lambda p=password: copy_to_clipboard(root, p), bg="#2196F3", fg="white")
         copy_button.pack(side=tk.RIGHT, padx=10)
+
+        delete_button = tk.Button(frame, text="Delete", font=button_font, command=lambda s=service: delete_callback(s, output_window), bg="#FF0000", fg="white")
+        delete_button.pack(side=tk.RIGHT, padx=10)
+
+    reload_button = tk.Button(output_window, text="Reload Passwords", font=button_font, command=reload_passwords, bg="#FF5722", fg="white")
+    reload_button.pack(pady=10)

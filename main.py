@@ -3,6 +3,7 @@ from tkinter import messagebox
 from tkinter import simpledialog
 import password_generator
 import password_manager
+import password_display  # Import the password_display module
 
 # Function to generate and display a password
 def show_password():
@@ -41,29 +42,44 @@ def unlock_database():
     if root_pass:
         entries = password_manager.unlock_database(root_pass)
         if entries:
-            show_all_passwords(entries)
+            show_passwords_window(entries)
+            enable_password_entry()
         else:
             messagebox.showerror("Error", "Invalid root password or no entries found.")
     else:
         messagebox.showerror("Error", "Root password is missing.")
 
-# Function to display all passwords in the database
-def show_all_passwords(entries):
-    output_window = tk.Toplevel(root)
-    output_window.title("All Passwords")
-    output_window.geometry("400x450")
-    output_window.configure(bg="#2E2E2E")
-    output_window.iconbitmap("key.ico")
+# Function to enable password entry after unlocking the database
+def enable_password_entry():
+    add_password_button.config(state=tk.NORMAL)
 
-    for service, password in entries:
-        frame = tk.Frame(output_window, bg="#2E2E2E")
-        frame.pack(fill=tk.X, pady=5)
+# Function to add a new password to the database
+def add_password():
+    service = simpledialog.askstring("Input", "Enter the service name:")
+    password = simpledialog.askstring("Input", "Enter the password:")
+    if service and password:
+        password_manager.save_password(service, password)
+        messagebox.showinfo("Saved", "Password saved successfully.")
+    else:
+        messagebox.showerror("Error", "Service name or password is missing.")
 
-        password_label = tk.Label(frame, text=f"{service}: {password}", font=password_font, bg="#2E2E2E", fg="#FFFFFF", justify=tk.LEFT)
-        password_label.pack(side=tk.LEFT, padx=10)
+# Function to show passwords window
+def show_passwords_window(entries):
+    password_display.show_all_passwords(root, entries, reload_passwords, delete_password)
 
-        copy_button = tk.Button(frame, text="Copy", font=button_font, command=lambda p=password: copy_to_clipboard(p), bg="#2196F3", fg="white")
-        copy_button.pack(side=tk.RIGHT, padx=10)
+# Function to reload passwords from the database
+def reload_passwords():
+    entries = password_manager.get_all_passwords()
+    if entries:
+        show_passwords_window(entries)
+    else:
+        messagebox.showerror("Error", "No entries found.")
+
+# Function to delete a password
+def delete_password(service, window):
+    password_manager.delete_password(service)
+    window.destroy()
+    reload_passwords()
 
 # Function to handle entry click event
 def on_entry_click(event):
@@ -118,6 +134,9 @@ save_button.pack(pady=10)
 
 unlock_button = tk.Button(root, text="Unlock Database", font=button_font, command=unlock_database, bg="#9C27B0", fg="white")
 unlock_button.pack(pady=10)
+
+add_password_button = tk.Button(root, text="Add Password", font=button_font, command=add_password, bg="#FF5722", fg="white", state=tk.DISABLED)
+add_password_button.pack(pady=10)
 
 # Run the application
 root.mainloop()

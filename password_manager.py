@@ -47,6 +47,18 @@ def unlock_database(input_password):
     else:
         return None
 
+# Function to get all passwords from the database
+def get_all_passwords():
+    c.execute("SELECT service, encrypted_password FROM passwords")
+    entries = c.fetchall()
+    decrypted_entries = [(service, cipher_suite.decrypt(encrypted_password).decode()) for service, encrypted_password in entries]
+    return decrypted_entries
+
+# Function to delete a password for a specific service
+def delete_password(service):
+    c.execute("DELETE FROM passwords WHERE service=?", (service,))
+    conn.commit()
+
 # Function to close the database connection
 def close_connection():
     conn.close()
