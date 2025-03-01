@@ -26,17 +26,31 @@ def save_password():
     else:
         messagebox.showerror("Error", "Service name or password is missing.")
 
+def copy_to_clipboard(password):
+    root.clipboard_clear()
+    root.clipboard_append(password)
+    messagebox.showinfo("Copied", "Password copied to clipboard.")
+
 def retrieve_password():
     service = simpledialog.askstring("Input", "Enter the service name to retrieve:")
     if service:
         password = password_manager.retrieve_password(service)
         if password:
-            messagebox.showinfo("Retrieved Password", f"Password for {service}: {password}")
+            output_window = tk.Toplevel(root)
+            output_window.title("Retrieved Password")
+            output_window.geometry("400x150")
+            output_window.configure(bg="#2E2E2E")
+            output_window.iconbitmap("key.ico")
+
+            password_label = tk.Label(output_window, text=f"Password for {service}: {password}", font=password_font, bg="#2E2E2E", fg="#FFFFFF")
+            password_label.pack(pady=10)
+
+            copy_button = tk.Button(output_window, text="Copy Password", font=button_font, command=lambda: copy_to_clipboard(password), bg="#2196F3", fg="white")
+            copy_button.pack(pady=10)
         else:
             messagebox.showerror("Error", "Service not found.")
     else:
         messagebox.showerror("Error", "Service name is missing.")
-
 def unlock_database():
     root_pass = simpledialog.askstring("Input", "Enter root password:", show='*')
     if root_pass:
