@@ -7,9 +7,12 @@ This is a simple password generator in Python.
 
 
 
-To use the Password Manger, install the following Package
+To use the Password Manger, install the following Packages
 
     pip install cryptography
+    pip install tk
+    pip install configparser
+
 
  Run the files **run.py** and **run2.py**, to create a Key for the Database.
  
